@@ -1,0 +1,58 @@
+---
+title: "Ben_code"
+author: "Aland"
+date: "4/12/2022"
+output: html_document
+---
+
+```{r}
+library(ggiraph)
+library(marmap)
+library(mapdata)
+library(lubridate)
+library(raster)
+library(dplyr)
+library(sf)
+library(readxl)
+library(ggplot2)
+```
+
+
+
+
+```{r}
+getwd()
+Shapefiles_water = st_read("data/SC_Major_River_Basins", "SC_Major_River_Basins")
+
+
+Shapefiles_stations = st_read("data/bw.SDE.STATIONS", "bw.SDE.STATIONS")
+
+Shapefiles_DHEC_303d = st_read("data/bw.SDE.DHEC_303D_18", "bw.SDE.DHEC_303D_18")
+
+Water_projected = st_transform(Shapefiles_water, crs = 4326)
+Stations_projected = st_transform(Shapefiles_stations, crs = 4326)
+
+DHEC_projected = st_transform(Shapefiles_DHEC_303d, crs = 4326)
+
+summary(DHEC_projected)
+summary(Shapefiles_DHEC_303d)
+
+
+lat_bounds = c(31.5, 35.5)
+lon_bounds = c(-83, -78)
+
+world_map = map_data("worldHires", ylim= lat_bounds, xlim=lon_bounds)
+plot(Water_projected)
+plot(Stations_projected)
+plot(DHEC_projected)
+
+SC_map = ggplot() +
+  geom_sf(data=DHEC_projected, aes(color = "pink", fill="303_d"))+
+  geom_sf(data=Water_projected, alpha=0.5, aes(color = "black", fill="Water_bodies")) +
+  geom_sf(data=Stations_projected, aes(color = "yellow", fill="Stations")) +
+  coord_sf(1.3, xlim = lon_bounds, ylim = lat_bounds)
+
+SC_map
+
+
+```
