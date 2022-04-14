@@ -8,7 +8,7 @@ output: html_document
 Individual codes, made figures, description and rationale for analysis.
 
 ### Ben's Code
-```{r , include=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE}
 
 ```
 
@@ -108,14 +108,15 @@ failures <- stationsFail20yr %>%
   summarize(NumCauses=n()) %>%
   filter(NumCauses == 8)
 ```
-The goal of these figures is to be able to easily visualize improvements to water bodies over time. The first pie chart shows the fraction of locations which have not been removed over the 20-year period 1998 to 2018. They are grouped by the number of causes which have caused each respective location to be on the list. The majority of locations have made the list due to a single issue, and have remained there for 20 years, however, in four locations over eight issues have persisted. These locations are 1) Mangolia Gardens, a former plantation, 2) Kingston Lake, which is next to a recycling plant, 3) McApline Creek, which is next to a construction facility that specializes in retention walls, 4) Reedy River, which is to the southeast of a wetland (nature's kidneys).The second pie chart shows the fraction of locations which have been removed over the 20-year period. The overwhelming majority of the water bodies have only had one issue to deal with. Water bodies with multiple issues are harder to remediate as they require more complex strategies. The final pie chart shows the fraction of water bodies that have been added over the 20-year period. Most of these water bodies only have one issue - this is likely just a function of increased monitoring of water bodies.
+
+The goal of these figures is to be able to easily visualize improvements to water bodies over time. The first pie chart shows the fraction of locations which have not been removed over the 20-year period 1998 to 2018. They are grouped by the number of causes which have caused each respective location to be on the list. The majority of locations have made the list due to a single issue, and have remained there for 20 years, however, in four locations over eight issues have persisted. These locations are 1) Magnolia Gardens, a former plantation, 2) Kingston Lake, which is next to a recycling plant, 3) McApline Creek, which is next to a construction facility that specializes in retention walls, 4) Reedy River, which is to the southeast of a wetland (nature's kidneys).The second pie chart shows the fraction of locations which have been removed over the 20-year period. The overwhelming majority of the water bodies have only had one issue to deal with. Water bodies with multiple issues are harder to remediate as they require more complex strategies. The final pie chart shows the fraction of water bodies that have been added over the 20-year period. Most of these water bodies only have one issue - this is likely just a function of increased monitoring of water bodies.
 
 ### Darcy's Code
-```{r , include=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE}
 
 ```
 
 ### Nick's Code
-```{r , include=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE}
 
 ```
