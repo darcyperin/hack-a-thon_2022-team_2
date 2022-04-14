@@ -1,0 +1,28 @@
+---
+title: "Group 2"
+author: "Ben Aland, Birch Lazo-Murphy, Darcy Perin, Nick Steichmann"
+date: "4/14/2022"
+output: html_document
+---
+
+Individual codes, made figures, description and rationale for analysis.
+
+### Ben's Code
+```{r setup, include=FALSE}
+
+```
+
+### Birch's Code
+```{r setup, include=FALSE}
+
+```
+
+### Darcy's Code
+```{r setup, include=FALSE}
+
+```
+
+### Nick's Code
+```{r setup, include=FALSE}
+
+```
