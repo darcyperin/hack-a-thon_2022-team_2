@@ -98,3 +98,17 @@ ggplot(Add98to18MoreThanOne, aes(x= "", y=Percent, fill=NumCauses)) +
   scale_fill_viridis(option = "C", discrete = TRUE) +
   theme_void() +
   labs(title = "Number of Causes for Stations Added 1998 to 2018")
+
+
+failures <- stationsFail20yr %>% 
+  group_by(LOCATION) %>% 
+  summarize(NumCauses=n()) %>%
+  filter(NumCauses == 8)
+# could look up these stations to see their proximity to other things
+# Magnolia Gardens is a plantation
+# Kingston Lake is next to a recycling plant
+# McApline Creek (ironically) next to a construction facility which specializes in retention walls
+# Reedy River after a wetland (nature's kidneys)
+
+
+
