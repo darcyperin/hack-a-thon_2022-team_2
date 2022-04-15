@@ -8,21 +8,115 @@ output: html_document
 Individual codes, made figures, description and rationale for analysis.
 
 ### Ben's Code
-```{r setup, include=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE}
 
 ```
 
 ### Birch's Code
-```{r setup, include=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(readxl)
+library(viridisLite)
+library(viridis)
 
+data18 <- read_xls("data/2018303d_final.xls")
+data08 <- read_xls("data/SC_303d_lists_2006to2016/2008303dfinal020608prtyrk.xls")
+data98 <- read_xls("data/SC_303d_lists_1998to2004/1998303dfin_al_rec_only.xls")
+
+# Stations who FAILED to improve from 1998 to 2008
+stationsFail98to08 <- inner_join(data98, data08, by = "STATION")
+Failed98to08MoreThanOne <- stationsFail98to08 %>% 
+  group_by(LOCATION) %>% 
+  summarize(count=n())
+
+# Stations who FAILED to improve from 1998 to 2018
+stationsFail20yr <- inner_join(stationsFail98to08, data18, by = "STATION")
+
+# Stations who got better and were REMOVED from 1998 to 2018
+stationsPass20yr <- data18[!data18$STATION %in% stationsFail20yr$STATION,]
+
+# Stations who were ADDED between 1998 and 2008 
+stationsWorse98to08 <- data08[!data08$STATION %in% data98$STATION,]
+
+# Stations who were ADDED between 1998 and 2018
+stationsWorse20yr <- data18[!data18$STATION %in% stationsWorse98to08$STATION,]
+
+# Number of Causes for Each Location that has continuously failed
+Failed98to18MoreThanOne <- stationsFail20yr %>% 
+  group_by(LOCATION) %>% 
+  summarize(NumCauses=n()) %>%
+  group_by(NumCauses) %>%
+  summarize(count2 = n())
+Failed98to18MoreThanOne$NumCauses <- sub("^", "N", Failed98to18MoreThanOne$NumCauses)
+Failed98to18MoreThanOne$Percent <- c(Failed98to18MoreThanOne$count2[1]/sum(Failed98to18MoreThanOne$count2)*100,
+                                     Failed98to18MoreThanOne$count2[2]/sum(Failed98to18MoreThanOne$count2)*100,
+                                     Failed98to18MoreThanOne$count2[3]/sum(Failed98to18MoreThanOne$count2)*100,
+                                     Failed98to18MoreThanOne$count2[4]/sum(Failed98to18MoreThanOne$count2)*100,
+                                     Failed98to18MoreThanOne$count2[5]/sum(Failed98to18MoreThanOne$count2)*100,
+                                     Failed98to18MoreThanOne$count2[6]/sum(Failed98to18MoreThanOne$count2)*100)
+
+ggplot(Failed98to18MoreThanOne, aes(x= "", y=Percent, fill=NumCauses)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  scale_fill_viridis(option = "C", discrete = TRUE) +
+  theme_void() +
+  labs(title = "Number of Causes for Locations Listed from 1998 to 2018")
+
+# Number of Causes for Each Location that has been removed from the list
+Pass98to18MoreThanOne <- stationsPass20yr %>% 
+  group_by(DESCRIPTION) %>% 
+  summarize(NumCauses=n()) %>%
+  na.omit() %>%
+  group_by(NumCauses) %>%
+  summarize(count2 = n()) 
+Pass98to18MoreThanOne$NumCauses <- sub("^", "N", Pass98to18MoreThanOne$NumCauses)
+Pass98to18MoreThanOne$Percent <- c(Pass98to18MoreThanOne$count2[1]/sum(Pass98to18MoreThanOne$count2)*100,
+                                     Pass98to18MoreThanOne$count2[2]/sum(Pass98to18MoreThanOne$count2)*100,
+                                     Pass98to18MoreThanOne$count2[3]/sum(Pass98to18MoreThanOne$count2)*100)
+                                     
+
+ggplot(Pass98to18MoreThanOne, aes(x= "", y=Percent, fill=NumCauses)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  scale_fill_viridis(option = "C", discrete = TRUE) +
+  theme_void() +
+  labs(title = "Number of Causes for Locations Removed 1998 to 2018")
+# They are doing a shit job of removing stations with more than one issue
+
+# Number of Causes for Each Location that has been added
+Add98to18MoreThanOne <- stationsWorse20yr %>% 
+  group_by(DESCRIPTION) %>% 
+  summarize(NumCauses=n()) %>%
+  na.omit() %>%
+  group_by(NumCauses) %>%
+  summarize(count2 = n()) 
+Add98to18MoreThanOne$NumCauses <- sub("^", "N", Add98to18MoreThanOne$NumCauses)
+Add98to18MoreThanOne$Percent <- c(Add98to18MoreThanOne$count2[1]/sum(Add98to18MoreThanOne$count2)*100,
+                                   Add98to18MoreThanOne$count2[2]/sum(Add98to18MoreThanOne$count2)*100)
+
+
+ggplot(Add98to18MoreThanOne, aes(x= "", y=Percent, fill=NumCauses)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  scale_fill_viridis(option = "C", discrete = TRUE) +
+  theme_void() +
+  labs(title = "Number of Causes for Locations Added 1998 to 2018")
+
+# Stations with a lot of failures
+failures <- stationsFail20yr %>% 
+  group_by(LOCATION) %>% 
+  summarize(NumCauses=n()) %>%
+  filter(NumCauses == 8)
 ```
 
+The goal of these figures is to be able to easily visualize improvements to water bodies over time. The first pie chart shows the fraction of locations which have not been removed over the 20-year period 1998 to 2018. They are grouped by the number of causes which have caused each respective location to be on the list. The majority of locations have made the list due to a single issue, and have remained there for 20 years, however, in four locations over eight issues have persisted. These locations are 1) Magnolia Gardens, a former plantation, 2) Kingston Lake, which is next to a recycling plant, 3) McApline Creek, which is next to a construction facility that specializes in retention walls, 4) Reedy River, which is to the southeast of a wetland (nature's kidneys).The second pie chart shows the fraction of locations which have been removed over the 20-year period. The overwhelming majority of the water bodies have only had one issue to deal with. Water bodies with multiple issues are harder to remediate as they require more complex strategies. The final pie chart shows the fraction of water bodies that have been added over the 20-year period. Most of these water bodies only have one issue - this is likely just a function of increased monitoring of water bodies.
+
 ### Darcy's Code
-```{r setup, include=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE}
 
 ```
 
 ### Nick's Code
-```{r setup, include=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE}
 
 ```
