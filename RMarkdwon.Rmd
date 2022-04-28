@@ -113,8 +113,360 @@ The goal of these figures is to be able to easily visualize improvements to wate
 
 ### Darcy's Code
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
-
+library(readxl)
+library(tidyverse)
+library(ggplot2)
 ```
+```{r}
+data_1998 = read_csv("data/dp_data/1998303dfin_al_rec_only_dp.csv", col_names = c("site", "station", "use", "cause", "HUC", "basin", "priority"))
+
+data_1998_edit= data_1998[-c(1),]
+```
+
+```{r}
+data_2008 = read_csv("data/dp_data/2008303dfinal020608_dp.csv", col_names = c("target_date", "note", "basin", "HUC", "location", "station", "county", "use", "cause"))
+
+data_2008_edit= data_2008[-c(1),]
+```
+
+```{r}
+data_2018 = read_csv("data/dp_data/2018303d_final_dp.csv", col_names = c("priority_rank", "note", "basin", "HUC", "county","description", "station", "use", "cause"))
+
+data_2018_edit= data_2018[-c(1),]
+```
+
+```{r}
+causes_98= data_1998_edit %>%
+  filter(!is.na(cause))
+
+causes_08= data_2008_edit %>%
+  filter(!is.na(cause)) 
+
+causes_18= data_2018_edit %>%
+  filter(!is.na(cause)) 
+```
+
+```{r}
+plot3=causes_98 %>%
+  ggplot(aes(x = cause, fill=basin)) +
+  geom_bar() +
+  facet_grid(vars(basin)) +
+  labs(x = "Pollutants", y = "Basins")+
+  ggtitle("1998 Pollutant Data")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  theme(strip.text.y = element_blank()) +
+  scale_fill_manual(values = c("firebrick2", "darkorange1", "goldenrod1", "seagreen3", "forestgreen", "royalblue2", "darkorchid", "plum1")) +
+   theme(legend.title=element_blank())
+
+plot3
+```
+
+```{r}
+plot1=causes_08 %>%
+  ggplot(aes(x = cause, fill=basin)) +
+  geom_bar() +
+  facet_grid(vars(basin)) +
+  labs(x = "Pollutants", y = "Basins")+
+  ggtitle("2008 Pollutant Data")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  theme(strip.text.y = element_blank()) +
+  scale_fill_manual(values = c("firebrick2", "darkorange1", "goldenrod1", "seagreen3", "forestgreen", "royalblue2", "darkorchid", "plum1")) +
+   theme(legend.title=element_blank())
+
+plot1
+```
+
+```{r}
+plot2=causes_18 %>%
+  ggplot(aes(x = cause, fill=basin)) +
+  geom_bar() +
+  facet_grid(vars(basin)) +
+  labs(x = "Pollutants", y = "Basins")+
+  ggtitle("2018 Pollutant Data")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  theme(strip.text.y = element_blank())+
+  scale_fill_manual(values = c("firebrick2", "darkorange1", "goldenrod1", "seagreen3", "forestgreen", "royalblue2", "darkorchid", "plum1")) +
+   theme(legend.title=element_blank()) 
+
+  
+plot2
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+```
+
+```{r}
+ggarrange(plot3, plot1, plot2, ncol = 1, nrow = 3)
+```
+
+```{r}
+NH3N_causes_08= causes_08 %>%
+  filter(cause== "NH3N")%>%
+  group_by(basin)
+#8 Stations
+
+NH3N_causes_18= causes_18 %>%
+  filter(cause== "NH3N")%>%
+  group_by(basin)
+#5 Stations
+
+NH3N_causes_98= causes_98 %>%
+  filter(cause== "NH3N")%>%
+  group_by(basin)
+#0 Stations
+
+CHLA_causes_08= causes_08 %>%
+  filter(cause== "CHLA")
+#15 Stations
+
+CHLA_causes_18= causes_18 %>%
+  filter(cause== "CHLA")
+#25 Stations
+
+CHLA_causes_98= causes_98 %>%
+  filter(cause== "CHLA")
+#0 Stations
+
+CR_causes_08= causes_08 %>%
+  filter(cause== "CR")
+#3 Station
+
+CR_causes_18= causes_18 %>%
+  filter(cause== "CR")
+#2 Station
+
+CR_causes_98= causes_98 %>%
+  filter(cause== "CR")
+#9 Station
+
+HG_causes_08= causes_08 %>%
+  filter(cause== "MG")
+#0 Stations
+
+HG_causes_18= causes_18 %>%
+  filter(cause== "MG")
+#0 Stations
+
+HG_causes_98= causes_98 %>%
+  filter(cause== "MG")
+#0 Stations
+
+CU_causes_08= causes_08 %>%
+  filter(cause== "CU")
+#93 Stations
+
+CU_causes_18= causes_18 %>%
+  filter(cause== "CU")
+#18 Stations
+
+CU_causes_98= causes_98 %>%
+  filter(cause== "CU")
+#36 Stations
+
+DO_causes_08= causes_08 %>%
+  filter(cause== "DO")
+#124 Stations
+
+DO_causes_18= causes_18 %>%
+  filter(cause== "DO")
+#158 Stations
+
+DO_causes_98= causes_98 %>%
+  filter(cause== "DO")
+#57 Stations
+
+ENTERO_causes_08= causes_08 %>%
+  filter(cause== "ENTERO")
+#11 Stations
+
+ENTERO_causes_18= causes_18 %>%
+  filter(cause== "ENTERO")
+#73 Stations
+
+ENTERO_causes_98= causes_98 %>%
+  filter(cause== "ENTERO")
+#0 Stations
+
+FC_causes_08= causes_08 %>%
+  filter(cause== "FC")
+#346 Stations
+
+FC_causes_18= causes_18 %>%
+  filter(cause== "FC")
+#116 Stations
+
+FC_causes_98= causes_98 %>%
+  filter(cause== "FC")
+#325 Stations
+
+PH_causes_08= causes_08 %>%
+  filter(cause== "PH")
+#66 Stations
+
+PH_causes_18= causes_18 %>%
+  filter(cause== "PH")
+#97 Stations
+
+PH_causes_98= causes_98 %>%
+  filter(cause== "PH")
+#21 Stations
+
+TN_causes_08= causes_08 %>%
+  filter(cause== "TN")
+#6 Stations
+
+TN_causes_18= causes_18 %>%
+  filter(cause== "TN")
+#23 Stations
+
+TN_causes_98= causes_98 %>%
+  filter(cause== "TN")
+#0 Stations
+
+ECOLI_causes_08= causes_08 %>%
+  filter(cause== "ECOLI")
+#0 Stations
+
+ECOLI_causes_18= causes_18 %>%
+  filter(cause== "ECOLI")
+#163 Stations
+
+ECOLI_causes_98= causes_98 %>%
+  filter(cause== "ECOLI")
+#0 Stations
+
+CD_causes_08= causes_08 %>%
+  filter(cause== "CD")
+#0 Stations
+
+CD_causes_18= causes_18 %>%
+  filter(cause== "CD")
+#11 Stations
+
+CD_causes_98= causes_98 %>%
+  filter(cause== "CD")
+#0 Stations
+
+BIO_causes_08= causes_08 %>%
+  filter(cause== "BIO")
+#165 Stations
+
+BIO_causes_18= causes_18 %>%
+  filter(cause== "BIO")
+#170 Stations
+
+BIO_causes_98= causes_98 %>%
+  filter(cause== "BIO")
+#170 Stations
+
+TURBIDITY_causes_08= causes_08 %>%
+  filter(cause== "TURBIDITY")
+#58 Stations
+
+TURBIDITY_causes_18= causes_18 %>%
+  filter(cause== "TURBIDITY")
+#58 Stations
+
+TURBIDITY_causes_98= causes_98 %>%
+  filter(cause== "TURBIDITY")
+#0 Stations
+
+TP_causes_08= causes_08 %>%
+  filter(cause== "TP")
+#51 Stations
+
+TP_causes_18= causes_18 %>%
+  filter(cause== "TP")
+#80 Stations
+
+TP_causes_98= causes_98 %>%
+  filter(cause== "TP")
+#16 Stations
+
+PB_causes_08= causes_08 %>%
+  filter(cause== "PB")
+#0 Stations
+
+PB_causes_18= causes_18 %>%
+  filter(cause== "PB")
+#0 Stations
+
+PB_causes_98= causes_98 %>%
+  filter(cause== "PB")
+#0 Stations
+
+PCB_causes_08= causes_08 %>%
+  filter(cause== "PCB")
+#5 Stations
+
+PCB_causes_18= causes_18 %>%
+  filter(cause== "PCB")
+#21 Stations
+
+PCB_causes_98= causes_98 %>%
+  filter(cause== "PCB")
+#0 Stations
+
+NI_causes_08= causes_08 %>%
+  filter(cause== "NI")
+#11 Stations
+
+NI_causes_18= causes_18 %>%
+  filter(cause== "NI")
+#2 Stations
+
+NI_causes_98= causes_98 %>%
+  filter(cause== "NI")
+#0 Stations
+
+ZN_causes_08= causes_08 %>%
+  filter(cause== "ZN")
+#22 Stations
+
+ZN_causes_18= causes_18 %>%
+  filter(cause== "ZN")
+#11 Stations
+
+ZN_causes_98= causes_98 %>%
+  filter(cause== "ZN")
+#20 Stations
+
+ORGANOTINS_causes_08= causes_08 %>%
+  filter(cause== "ORGANOTINS")
+#0 Stations
+
+ORGANOTINS_causes_18= causes_18 %>%
+  filter(cause== "ORGANOTINS")
+#0 Stations
+
+ORGANOTINS_causes_98= causes_98 %>%
+  filter(cause== "ORGANOTINS")
+#0 Stations
+
+SED_causes_98= causes_98 %>%
+  filter(cause== "SED")
+#3 Stations
+
+PEST_causes_98= causes_98 %>%
+  filter(cause== "PEST")
+#2 Stations
+```
+
+```{r}
+library(dplyr)
+library(kableExtra)
+
+station= read_csv("data/dp_data/station_numb.csv")
+
+station %>%
+  kbl(caption = "Number of Stations with The Same Pollutants") %>%
+  kable_classic(full_width = F, html_font = "Cambria") 
+```
+
+The objective of this code is to be able to visualize the major pollutants found in each basin for 1998, 2008 and 2018 using a ggplot. The second goal was to make a table stating the numerical values of the number of stations with the same pollutant for 1998, 2008, and 2018. This is important because it allows us to see if specific pollutants persist for the 20 year period. Based on the graphs, it can be seen that Fecal Coliform Bacteria is the greatest pollutant, but the amount of stations it effects has significantly decreased between 2008 and 2018. Another trend is that 2018 has the most variety of pollutants, and there is an increase in almost every pollutant between 2008 and 2018. This may be due to either and increase in pollution, or an increase in the amount of testing done to detect the pollutants. 
+
 
 ### Nick's Code
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
